@@ -47,4 +47,4 @@ $ docker push 018042299534.dkr.ecr.us-east-1.amazonaws.com/txn-processor:latest
 ```
 
 ## Architecture
-![alt text](https://github.com/androidexj9/python.aws-txn-processor/architecture.png)
+![alt text](https://github.com/androidexj9/python.aws-txn-processor/blob/main/architecture.png)
