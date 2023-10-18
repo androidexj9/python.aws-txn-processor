@@ -53,7 +53,7 @@ $ docker push 018042299534.dkr.ecr.us-east-1.amazonaws.com/txn-processor:latest
 ```
 
 ## Architecture
-![alt text](https://github.com/androidexj9/python.aws-txn-processor/blob/main/architecture.png)
+![alt text](https://github.com/androidexj9/python.aws-txn-processor/blob/main/static/stori-code-challenge.drawio.png)
 
 ## References
 https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html
