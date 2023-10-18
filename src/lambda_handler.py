@@ -1,9 +1,10 @@
+import sys
+import io
+import os
 import json
 import urllib.parse
 import boto3
 import csv
-import io
-import os
 
 print('Loading custom function')
 
