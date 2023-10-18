@@ -52,6 +52,9 @@ $ docker push <repositoryUri>:latest
 $ docker push 018042299534.dkr.ecr.us-east-1.amazonaws.com/txn-processor:latest
 ```
 
+## Summary Account Balance email
+![alt text](https://github.com/androidexj9/python.aws-txn-processor/blob/main/static/email-summary-account-balance.png)
+
 ## Architecture
 ![alt text](https://github.com/androidexj9/python.aws-txn-processor/blob/main/static/stori-code-challenge.drawio.png)
 
