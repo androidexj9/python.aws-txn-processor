@@ -28,7 +28,7 @@ TO_EMAIL_ACCOUNT = os.getenv('TO_EMAIL_ACCOUNT')
 FROM_EMAIL_ACCOUNT = os.getenv('FROM_EMAIL_ACCOUNT')
 SES_CONFIG_SET_NAME = os.environ["SES_CONFIG_SET_NAME"]
 
-LOGGER.info('Loading custom function')
+LOGGER.info('Loading handler function v.1.0')
 
 
 def handler(event, context):
