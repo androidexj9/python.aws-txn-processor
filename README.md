@@ -16,8 +16,9 @@ source .venv/bin/activate
 ```
 (.venv) python3 -m pip install -r requirements.txt
 ```
+
 ```
-(.venv) python3 -m flask run
+coverage run -m pytest
 ```
 
 

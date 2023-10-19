@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 COPY src/lambda_handler.py ${LAMBDA_TASK_ROOT}
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
-CMD [ "lambda_handler.lambda_handler" ]
+CMD [ "lambda_handler.handler" ]

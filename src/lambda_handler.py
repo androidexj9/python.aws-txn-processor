@@ -1,3 +1,9 @@
+"""
+Simple Lambda function that reads file from S3 bucket and saves
+its content to DynamoDB table
+"""
+# !/usr/bin/env python3
+
 import sys
 import io
 import os
@@ -5,8 +11,11 @@ import json
 import urllib.parse
 import boto3
 import csv
+import logging
 
-print('Loading custom function')
+# LOGGER
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
 
 # CONSTANTS
 S3_CLIENT = boto3.client('s3')
@@ -19,9 +28,11 @@ TO_EMAIL_ACCOUNT = os.getenv('TO_EMAIL_ACCOUNT')
 FROM_EMAIL_ACCOUNT = os.getenv('FROM_EMAIL_ACCOUNT')
 SES_CONFIG_SET_NAME = os.environ["SES_CONFIG_SET_NAME"]
 
+LOGGER.info('Loading custom function')
 
-def lambda_handler(event, context):
-    # print("m=lambda_handler, Received event: " + json.dumps(event, indent=2))
+
+def handler(event, context):
+    # LOGGER.info("m=lambda_handler, Received event: " + json.dumps(event, indent=2))
 
     # Get the object from the event
     bucket = event['Records'][0]['s3']['bucket']['name']
@@ -46,19 +57,24 @@ def lambda_handler(event, context):
             average_credit_amount += float(txn_amount) if float(txn_amount) > 0 else 0
             average_debit_amount += float(txn_amount) if float(txn_amount) < 0 else 0
             total_balance += float(txn_amount)
-            print("m=lambda_handler" + str.format("id: {} date: {} transaction: {}", txn_id, txn_date, txn_amount))
+            LOGGER.info(
+                "m=lambda_handler" + str.format("id: {} date: {} transaction: {}", txn_id, txn_date, txn_amount))
 
             # Insert elements from CSV to DynamoDB
             insert_account_balance_txn(txn_id, txn_date, txn_amount)
 
         # Send account balance email
-        print("m=lambda_handler, Sending email to: " + TO_EMAIL_ACCOUNT)
+        LOGGER.info("m=lambda_handler, Sending email to: " + TO_EMAIL_ACCOUNT)
         send_account_balance_email(average_credit_amount, average_debit_amount, total_balance)
 
     except Exception as e:
-        print(e)
-        print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
+        LOGGER.error(e)
+        LOGGER.error('Error getting object {} from bucket {}'.format(key, bucket))
         raise e
+    return {
+        'StatusCode': 200,
+        'Message': 'SUCCESS'
+    }
 
 
 def insert_account_balance_txn(txn_id: str, txn_date: str, txn_amount: str):
@@ -73,7 +89,7 @@ def insert_account_balance_txn(txn_id: str, txn_date: str, txn_amount: str):
             "transaction": {"N": txn_amount},
         },
     )
-    # print(response)
+    # LOGGER.info(response)
 
 
 def send_account_balance_email(average_credit_amount: float, average_debit_amount: float, total_balance: float):
@@ -86,7 +102,7 @@ def send_account_balance_email(average_credit_amount: float, average_debit_amoun
             <div style="background-color: #f6f8fb;">
             
                 <div id="header">
-                    <img src="https://finnovating.s3.eu-central-1.amazonaws.com/companies/company_26535/main_logo_26535.png" alt="Stori">
+                    <img src="https://finnovating.s3.eu-central-1.amazonaws.com/companies/company_26535/main_logo_26535.png" alt="StoriCard">
                 </div>
             
                 <div id="main">
@@ -148,4 +164,4 @@ def send_account_balance_email(average_credit_amount: float, average_debit_amoun
         Message=email_message,
         Source=FROM_EMAIL_ACCOUNT
     )
-    print(f"ses response id received: {ses_response['MessageId']}.")
+    LOGGER.info(f"ses response id received: {ses_response['MessageId']}.")
